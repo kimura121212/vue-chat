@@ -23,7 +23,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
+import { isTyping } from '../chatkit.js'
 
 export default {
   name: 'message-form',
@@ -42,6 +43,20 @@ export default {
     ...mapGetters([
       'hasError'
     ])
+  },
+  methods: {
+    ...mapActions([
+      'sendMessage',
+    ]),
+    async onSubmit() {
+      const result = await this.sendMessage(this.message);
+      if(result) {
+        this.message = '';
+      }
+    },
+     async isTyping() {
+      await isTyping(this.activeRoom.id);
+    }
   }
 }
 </script>

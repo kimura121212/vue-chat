@@ -45,10 +45,19 @@ export default {
   },
   async changeRoom({ commit }, roomId) {
     try {
+      commit('setError', '');
+      commit('setSending', true);
       const { id, name } = await chatkit.subscribeToRoom(roomId);
       commit('setActiveRoom', {id, name});
     }catch(error){
       handleError(commit, error)
+    }finally {
+      commit('setSending', false);
     }
+  },
+  async logout({commit}) {
+    commit('reset');
+    chatkit.disconnectUser();
+    window.localStorage.clear();
   }
 }
